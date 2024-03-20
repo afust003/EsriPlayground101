@@ -1,0 +1,35 @@
+/*isMinor
+The isMinor flag indicates whether the arc segment is the smaller segment of the ellipse. For a simplified model, you might decide this based on the distance or angle spanned by the arc:
+
+If the arc represents less than half the circumference of an imaginary circle drawn on the Earth's surface, it could be considered a minor arc.
+Conversely, if it represents more than half, it would be a major arc.
+isCounterClockwise
+The isCounterClockwise flag indicates the direction in which the arc is drawn from the start point to the end point:
+
+For a simplistic approach, you might determine this based on the relative longitudinal positions of the start and end points or by comparing latitudes if the movement is primarily north-south.
+However, these simplistic models do not account for all scenarios, especially those involving crossing the International Date Line or poles.
+
+Given these complexities, here's a conceptual approach to setting isMinor and isCounterClockwise, keeping in mind that accurate determination might require more context about your specific use case:
+*/
+
+/*
+This code uses a very basic approach to set isCounterClockwise based on the initial bearing, assuming arcs drawn in an easterly direction (bearing <= 180) are counter-clockwise. The isMinor flag is set to true by default, assuming that you are only dealing with minor arcs; however, in reality, whether an arc is minor or not might require a more detailed analysis based on the specific geometry of the arc and the distances involved.
+
+For more accurate and context-sensitive determinations of these flags, you'd need to consider the specific geometric relationships between your start and end points, potentially involving more sophisticated geographic or geometric calculations that take into account the specifics of your mapping scenario and the intended visual representation.
+*/
+
+// Assuming startPoint and endPoint are defined
+// Calculate initial bearing from startPoint to endPoint
+double bearing = CalculateInitialBearing(startPoint, endPoint);
+
+// Determine if the arc should be minor
+// This simplistic model assumes all arcs are minor; adjust as needed
+bool isMinor = true; // This assumption might not hold for very long distances
+
+// Determine if the arc is drawn counter-clockwise
+// A simple model based on bearing; might need refinement for your use case
+bool isCounterClockwise = bearing <= 180;
+
+// Adjust the calculation of isMinor and isCounterClockwise as needed
+
+
