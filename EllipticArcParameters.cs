@@ -1,6 +1,9 @@
 using Esri.ArcGISRuntime.Geometry;
 using System;
 
+/*
+This function calculates the parameters needed to create an EllipticArcSegment based on the geodesic properties of the line connecting the start and end points. The semiMajorAxis is set as half the geodesic distance for demonstration purposes. The rotationAngle is calculated from the initial bearing, assuming a straightforward path from start to end. This example simplifies and approximates the calculations, especially for centralAngle, which in real applications might require more sophisticated geospatial analysis to accurately represent the desired arc segment.
+*/
 public class EllipticArcParameters
 {
     public double SemiMajorAxis { get; set; }
