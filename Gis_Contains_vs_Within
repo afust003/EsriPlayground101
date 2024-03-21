@@ -1,0 +1,11 @@
+Contains vs Within:
+https://pro.arcgis.com/en/pro-app/latest/sdk/api-reference/topic8210.html
+https://pro.arcgis.com/en/pro-app/latest/sdk/api-reference/topic8294.html
+Fact: contains should work-> https://community.esri.com/t5/arcgis-runtime-sdk-for-android-questions/identify-if-point-within-polygon/td-p/482103
+
+https://community.esri.com/t5/arcgis-api-for-silverlight-questions/polygons-crossing-the-180-meridian/td-p/128357
+https://gis.stackexchange.com/questions/421473/postgis-geometric-shapes-crossing-180-meridian
+https://community.esri.com/t5/net-maps-sdk-questions/help-using-normalizecentralmeridian-or-spanning/td-p/1204342
+
+Aside:
+Earth Geometry - https://mathspace.co/textbooks/syllabuses/Syllabus-814/topics/Topic-20264/subtopics/Subtopic-266490/
