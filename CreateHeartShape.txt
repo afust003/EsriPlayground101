@@ -1,0 +1,27 @@
+Adjust the size parameter (0.5 in MakeHeartGeometry) based on how large you want the heart to appear on the map. This value represents degrees, which correspond to geographical distances quite differently compared to meters in a projection like WebMercator.
+
+
+private GraphicsOverlay MakeCurvedGraphicsOverlay()
+{
+    // Create a simple fill symbol with outline.
+    SimpleLineSymbol curvedLineSymbol = new SimpleLineSymbol(SimpleLineSymbolStyle.Solid, Color.Black, 1);
+    SimpleFillSymbol curvedFillSymbol = new SimpleFillSymbol(SimpleFillSymbolStyle.Solid, Color.Red, curvedLineSymbol);
+
+    // Create a graphics overlay for the polygons with curve segments.
+    GraphicsOverlay curvedGraphicsOverlay = new GraphicsOverlay();
+
+    // Create and assign a simple renderer to the graphics overlay.
+    curvedGraphicsOverlay.Renderer = new SimpleRenderer(curvedFillSymbol);
+
+    // Create a heart-shaped graphic.
+    // Using geographic coordinates for the center of Florida in WGS84
+    MapPoint origin = new MapPoint(-81.5158, 27.6648, SpatialReferences.Wgs84);
+    // Adjust the size of the heart as needed, the value 0.5 is arbitrary and might need tweaking
+    Geometry heartGeometry = MakeHeartGeometry(origin, 0.5);
+    Graphic heartGraphic = new Graphic(heartGeometry);
+    curvedGraphicsOverlay.Graphics.Add(heartGraphic);
+
+    return curvedGraphicsOverlay;
+}
+
+
