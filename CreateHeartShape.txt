@@ -24,4 +24,57 @@ private GraphicsOverlay MakeCurvedGraphicsOverlay()
     return curvedGraphicsOverlay;
 }
 
+private Geometry MakeHeartGeometry(MapPoint center, double sideLength)
+{
+    if (sideLength <= 0) return null;
+
+    SpatialReference spatialReference = center.SpatialReference;
+
+    // Adjust the sideLength for degrees in geographic coordinates.
+    // Example: 0.01 degrees may be a suitable starting point for visual verification.
+    sideLength = sideLength / 10000.0; // Adjust according to visual needs
+
+    // The x and y coordinates to simplify the calculation.
+    double minX = center.X - 0.5 * sideLength;
+    double minY = center.Y - 0.5 * sideLength;
+
+    // The radius of the arcs.
+    double arcRadius = sideLength * 0.25;
+
+    // Bottom left curve.
+    MapPoint leftCurveStart = new MapPoint(center.X, minY, spatialReference);
+    MapPoint leftCurveEnd = new MapPoint(minX, minY + 0.75 * sideLength, spatialReference);
+    MapPoint leftControlMapPoint1 = new MapPoint(center.X, minY + 0.25 * sideLength, spatialReference);
+    MapPoint leftControlMapPoint2 = new MapPoint(minX, center.Y, spatialReference);
+    CubicBezierSegment leftCurve = new CubicBezierSegment(leftCurveStart, leftControlMapPoint1, leftControlMapPoint2, leftCurveEnd, spatialReference);
+
+    // Top left arc.
+    MapPoint leftArcCenter = new MapPoint(minX + 0.25 * sideLength, minY + 0.75 * sideLength, spatialReference);
+    EllipticArcSegment leftArc = EllipticArcSegment.CreateCircularEllipticArc(leftArcCenter, arcRadius, Math.PI, centralAngle: -Math.PI, spatialReference);
+
+    // Top right arc.
+    MapPoint rightArcCenter = new MapPoint(minX + 0.75 * sideLength, minY + 0.75 * sideLength, spatialReference);
+    EllipticArcSegment rightArc = EllipticArcSegment.CreateCircularEllipticArc(rightArcCenter, arcRadius, Math.PI, centralAngle: -Math.PI, spatialReference);
+
+    // Bottom right curve.
+    MapPoint rightCurveStart = new MapPoint(minX + sideLength, minY + 0.75 * sideLength, spatialReference);
+    MapPoint rightCurveEnd = leftCurveStart;
+    MapPoint rightControlMapPoint1 = new MapPoint(minX + sideLength, center.Y, spatialReference);
+    MapPoint rightControlMapPoint2 = leftControlMapPoint1;
+    CubicBezierSegment rightCurve = new CubicBezierSegment(rightCurveStart, rightControlMapPoint1, rightControlMapPoint2, rightCurveEnd, spatialReference);
+
+    // Create the heart polygon.
+    Part newPart = new Part(new Segment[]
+    {
+        leftCurve,
+        leftArc,
+        rightArc,
+        rightCurve
+    }, spatialReference);
+    PolygonBuilder builder = new PolygonBuilder(spatialReference);
+    builder.AddPart(newPart);
+    return builder.ToGeometry();
+}
+
+
 
