@@ -1,0 +1,33 @@
+public List<MapPoint> CreateDenseGeodesicPolygon(List<MapPoint> originalPoints, double intervalMeters)
+{
+    List<MapPoint> densePoints = new List<MapPoint>();
+    for (int i = 0; i < originalPoints.Count; i++)
+    {
+        // Add the starting point of the segment
+        densePoints.Add(originalPoints[i]);
+
+        // Get the next point, or loop to the first if at the end
+        MapPoint nextPoint = originalPoints[(i + 1) % originalPoints.Count];
+
+        // Calculate the geodesic line between the points
+        var segment = new Polyline(new MapPoint[] { originalPoints[i], nextPoint }, SpatialReferences.Wgs84);
+        var densifiedSegment = GeometryEngine.DensifyGeodetic(segment, intervalMeters, LinearUnits.Meters, GeodeticCurveType.Geodesic);
+
+        // Extract the points from the densified segment and add them to the list
+        if (densifiedSegment is Polyline polyline)
+        {
+            foreach (var part in polyline.Parts)
+            {
+                foreach (var point in part.Points)
+                {
+                    // Avoid duplicating points that are the same as the segment start
+                    if (!point.IsEqual(originalPoints[i]))
+                    {
+                        densePoints.Add(point);
+                    }
+                }
+            }
+        }
+    }
+    return densePoints;
+}
