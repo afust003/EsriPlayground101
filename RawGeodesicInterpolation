@@ -1,0 +1,49 @@
+using System;
+using System.Collections.Generic;
+
+public class GeodesicInterpolation
+{
+    private const double EarthRadius = 6371000; // Earth radius in meters
+
+    // Convert degrees to radians
+    private static double ToRadians(double angle) => angle * Math.PI / 180.0;
+
+    // Haversine formula to calculate distance between two points
+    private static double HaversineDistance(double lat1, double lon1, double lat2, double lon2)
+    {
+        double dLat = ToRadians(lat2 - lat1);
+        double dLon = ToRadians(lon2 - lon1);
+        lat1 = ToRadians(lat1);
+        lat2 = ToRadians(lat2);
+
+        double a = Math.Sin(dLat / 2) * Math.Sin(dLat / 2) +
+                   Math.Sin(dLon / 2) * Math.Sin(dLon / 2) * Math.Cos(lat1) * Math.Cos(lat2);
+        double c = 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
+        return EarthRadius * c;
+    }
+
+    // Interpolates points along the geodesic line
+    public static List<(double, double)> InterpolateGeodesicPoints(double lat1, double lon1, double lat2, double lon2, double interval)
+    {
+        var points = new List<(double, double)>();
+        double distance = HaversineDistance(lat1, lon1, lat2, lon2);
+        int numPoints = (int)(distance / interval);
+        double fraction = interval / distance;
+
+        for (int i = 0; i <= numPoints; ++i)
+        {
+            double A = Math.Sin((1 - fraction * i) * distance) / Math.Sin(distance);
+            double B = Math.Sin(fraction * i * distance) / Math.Sin(distance);
+            double x = A * Math.Cos(lat1) * Math.Cos(lon1) + B * Math.Cos(lat2) * Math.Cos(lon2);
+            double y = A * Math.Cos(lat1) * Math.Sin(lon1) + B * Math.Cos(lat2) * Math.Sin(lon2);
+            double z = A * Math.Sin(lat1) + B * Math.Sin(lat2);
+
+            double newLat = Math.Atan2(z, Math.Sqrt(x * x + y * y));
+            double newLon = Math.Atan2(y, x);
+
+            points.Add((newLat * 180.0 / Math.PI, newLon * 180.0 / Math.PI));
+        }
+
+        return points;
+    }
+}
